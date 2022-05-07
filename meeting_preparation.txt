@@ -1,0 +1,9 @@
+Paper : see Complex-Sysems-project/paper.pdf
+Theme : Genetic Algorithms
+
+Idea of paper : teaching computer to play the Falling Ball game. We will implement the game with our own code, or taking code from internet, apply an GA to it,
+and compare results if possible
+
+Possible extensions : - Other fitness rule
+                      - Other game (but it means totally different thing)
+                      - 
