@@ -90,4 +90,4 @@ for row in range(trial_chromosomes.shape[0]):
         if trial_chromosomes[row][column]==0: trial_chromosomes[row][column]=trial_chromosomes[row][column]-1
 
 a=GA_falling_ball(trial_chromosomes, 2, N, 0.5, 3)         
-a
+print(a)
