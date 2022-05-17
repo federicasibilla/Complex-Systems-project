@@ -12,12 +12,13 @@ from game import falling_ball_game
 import numpy as np
 import random as rn
 from copy import copy, deepcopy
+from aux_func import parent_selection,offspring_method
 
 # ------------------ GA FUNCTION ---------------------------------------------------------------------------------
 
 # function to progress into generation a desired amount of steps
 # INPUTS:  initial_population: matrix containing 51 chromosomes, each of length n
-#          steps: number of iteration over generations 
+#          steps: int number of iteration over generations 
 #          N : dimension of falling ball arena         |
 #          lbd : parameter of fitness function         |   parameters to pass to falling_ball_game
 #          s : board width                             |
@@ -32,62 +33,28 @@ def GA_falling_ball(initial_population, steps, N, lbd, s):
     # start iteration over generations
     for generation in range(steps):
 
-        # inizialize empty matrix to store kids
-        new_generation=np.zeros(initial_population.shape) 
-
-        # evaluate and rank current population and choose half chromosomes -2 to generate offspring
-        new_gen_fit=np.zeros(current_population.shape[0])
-        current_population_efficiency=[falling_ball_game(chromosome, N, lbd, s) for chromosome in current_population]
-
         # rank and select parents (25: 1 is the best performing, the others selected with p proportional to ranking position)
-        sorted_indices=np.argsort(current_population_efficiency)
-        weights = np.asarray([(i+1) for i in range(len(current_population_efficiency)-1)])
-        parents_indices = np.append(sorted_indices[0],np.random.choice(sorted_indices[1:], size=24, replace=False, p=weights/sum(weights)))
+        parents_indices = parent_selection('ranking_proportional', current_population, 25, N, lbd, s)
 
-        # generate offspring: last chromosome left unchanged from best of previous generation
-        new_generation[-1]=current_population[parents_indices[0]]
+        # generate offspring: method='two_by_two'
+        new_generation=offspring_method(parents_indices, current_population, 'two_by_two')
 
-        for chromosome,j in  zip(new_generation[::2],range(0,new_generation.shape[0]-1,2)):
-            
-            # perform cross over with prob. 0.25, leave couple unchanged otherwise
-            # choose parents randomly among intermediate population
-
-            cross_p=rn.random()
-            parents = rn.sample(list(parents_indices), k=2)
-            if cross_p<0.25:
-                cross_point = rn.randint(0,len(chromosome)-1)
-                chromosome[:cross_point]=current_population[parents[1]][(len(chromosome)-cross_point):]
-                chromosome[cross_point:]=current_population[parents[0]][cross_point:]
-                new_generation[j+1][:(len(chromosome)-cross_point)]=current_population[parents[1]][:(len(chromosome)-cross_point)]
-                new_generation[j+1][(len(chromosome)-cross_point):]=current_population[parents[0]][:cross_point]
-            else:
-                chromosome=current_population[parents[0]] 
-                new_generation[j+1]=current_population[parents[1]]
-
-            # introduce random mutation
-            for k in range(len(chromosome)):
-                if rn.random()<0.01: chromosome[k]=rn.choice([-1, 1])
-
-            new_gen_fit[j]=falling_ball_game(chromosome, N, lbd, s)
-            new_gen_fit[j+1]=falling_ball_game(new_generation[j+1], N, lbd, s)
-        
-        new_gen_fit[-1]=falling_ball_game(current_population[parents_indices[0]], N, lbd, s)
+        # evaluate efficiency of new generation and store 
+        avg_fit_new = np.mean(np.asarray([falling_ball_game(chromosome, N, lbd, s) for chromosome in new_generation]))
+        average_fitness[generation] = avg_fit_new 
         
         # prepare to repeat breeding
         current_population = new_generation
-
-        # evaluate efficiency of new generation and store 
-        avg_fit_new = np.mean(new_gen_fit)
-        average_fitness[generation] = avg_fit_new 
     
     return [avg_fit_new, current_population]
 
 N=11
 n=2*(N-1)*(2*(N-1)+1)
-trial_chromosomes=array = np.random.randint(0,2, size=(51,n))
+trial_chromosomes=array = np.ones((51,n))
 for row in range(trial_chromosomes.shape[0]):
     for column in range(trial_chromosomes.shape[1]):
-        if trial_chromosomes[row][column]==0: trial_chromosomes[row][column]=trial_chromosomes[row][column]-1
+        if rn.random()<0.5: trial_chromosomes[row][column]-=2
 
-print(GA_falling_ball(trial_chromosomes, 2, N, 0.5, 3))        
+print(GA_falling_ball(trial_chromosomes, 2, N, 0.5, 3))    
+
 
