@@ -2,6 +2,7 @@
 
 from GA import GA_falling_ball
 import matplotlib.pyplot as plt
+import matplotlib.colors as mlpc
 import numpy as np
 import random as rn
 import time
@@ -24,7 +25,7 @@ plt.rc('figure', titlesize=18)  # fontsize of the figure title
 N = 15 # size of grid
 n=2*(N-1)*(2*(N-1)+1) # length of chromosome
 s = 3 # size of pod
-lambdas = np.logspace(0.05, 5, 10) # parameter lambda
+lambdas = np.logspace(np.log10(0.05), np.log10(5), 10) # parameter lambda
 X = [] # lambdas for heatmap
 Y = [] # fitnesses for heatmap
 
@@ -50,10 +51,11 @@ for i,l in enumerate(lambdas): # iterate on lambdas
 # Plot heatmap
 
 plt.figure()
-plt.hist2d(X, Y)
+plt.hist2d(X, Y, bins=(lambdas, np.linspace(min(Y),max(Y),20)))
 plt.xlabel('$\\lambda$')
 plt.ylabel('fitness')
 plt.xscale('log')
+plt.xlim([lambdas[0], lambdas[-1]])
 plt.colorbar()
 plt.tight_layout()
 plt.show()
