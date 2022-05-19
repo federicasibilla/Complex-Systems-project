@@ -11,7 +11,7 @@ from game import falling_ball_game
 
 import numpy as np
 import random as rn
-from copy import copy, deepcopy
+from copy import deepcopy
 from aux_func import parent_selection,offspring_method
 
 # ------------------ GA FUNCTION ---------------------------------------------------------------------------------
@@ -28,8 +28,9 @@ from aux_func import parent_selection,offspring_method
 def GA_falling_ball(initial_population, steps, N, lbd, s):
 
     current_population=deepcopy(initial_population)
+    n = len(current_population[0,:])
     average_fitness = np.zeros(steps)
-
+    evolution_best_chromosomes = np.zeros((steps,n))
     # start iteration over generations
     for generation in range(steps):
 
@@ -40,11 +41,19 @@ def GA_falling_ball(initial_population, steps, N, lbd, s):
         new_generation=offspring_method(parents_indices, current_population, 'traditional_cross')
 
         # evaluate efficiency of new generation and store 
-        avg_fit_new = np.mean(np.asarray([falling_ball_game(chromosome, N, lbd, s) for chromosome in new_generation]))
+        fitnesses = np.asarray([falling_ball_game(chromosome, N, lbd, s) for chromosome in new_generation])
+        avg_fit_new = np.mean(fitnesses)
         average_fitness[generation] = avg_fit_new 
         
         # prepare to repeat breeding
         current_population = new_generation
+        
+        # save best chromosome
+        evolution_best_chromosomes[generation] = np.asarray(current_population[np.argsort(fitnesses)[-1]])
+   
+    # save best chromosomes and final population in text file
+    np.savetxt('final_population.txt', current_population,fmt='%0.0d')
+    np.savetxt('evolution_best_chromosomes.txt', evolution_best_chromosomes,fmt='%1.0d')
     
     return [avg_fit_new, current_population]
 

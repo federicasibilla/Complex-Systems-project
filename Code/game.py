@@ -35,7 +35,7 @@ import math
 def falling_ball_game(rules, N, lbd, s):
     try:
         if N/2 == int(N/2) or s/2 == int(s/2):
-            er = 1/0
+            1/0
     except:
         print('Error : N and s must be odd, not even !')
     else:
@@ -93,16 +93,23 @@ def falling_ball_game(rules, N, lbd, s):
         r = r/nb_red
         # compute fitness with average distances
         f = 1/(1+np.exp(-lbd*((s/2) - g))) - 1/(1+np.exp(-lbd*((s/2) - r))) + 1
+        
+        # compute fitness' max and min possible value 
+        fmax = 1/(1+np.exp(-lbd*(s/2))) - 1/(1+np.exp(-lbd*((s/2) - (N-1)))) + 1
+        fmin = 1/(1+np.exp(-lbd*((s/2) - (N-1)))) - 1/(1+np.exp(-lbd*(s/2))) + 1
+        # normalize fitness between 1 and 2 in order to compare with paper
+        f = 1 + (f-fmin)/(fmax-fmin)
+        
         return f
 
  
-N = 9 # size of grid, must be odd /!\
-s = 3 # length of pod, must be odd /!\
-lbd = 0.5 # paramter lambda
+# N = 9 # size of grid, must be odd /!\
+# s = 3 # length of pod, must be odd /!\
+# lbd = 0.5 # paramter lambda
 
-test_rule = np.zeros(2*(N-1)*(2*(N-1)+1))
-for i in np.arange(len(test_rule)):
-    test_rule[i] = random.choice([-1, 1])
+#test_rule = np.zeros(2*(N-1)*(2*(N-1)+1))
+#for i in np.arange(len(test_rule)):
+#    test_rule[i] = random.choice([-1, 1])
 
-print(falling_ball_game(test_rule, N, lbd, s))
+#print(falling_ball_game(test_rule, N, lbd, s))
         
