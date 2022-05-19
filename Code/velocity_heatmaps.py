@@ -1,5 +1,5 @@
 from GA import GA_falling_ball
-from fitness_heatmaps import progress
+from progress import progress
 import matplotlib.pyplot as plt
 import numpy as np
 import random as rn
