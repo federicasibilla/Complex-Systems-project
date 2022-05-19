@@ -103,13 +103,13 @@ def falling_ball_game(rules, N, lbd, s):
         return f
 
  
-# N = 9 # size of grid, must be odd /!\
-# s = 3 # length of pod, must be odd /!\
-# lbd = 0.5 # paramter lambda
-
+#N = 9 # size of grid, must be odd /!\
+#s = 3 # length of pod, must be odd /!\
+#lbd = 0.5 # paramter lambda
+#
 #test_rule = np.zeros(2*(N-1)*(2*(N-1)+1))
 #for i in np.arange(len(test_rule)):
 #    test_rule[i] = random.choice([-1, 1])
-
+#
 #print(falling_ball_game(test_rule, N, lbd, s))
         

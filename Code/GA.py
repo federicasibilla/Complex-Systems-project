@@ -13,6 +13,7 @@ import numpy as np
 import random as rn
 from copy import deepcopy
 from aux_func import parent_selection,offspring_method
+import matplotlib.pyplot as plt
 
 # ------------------ GA FUNCTION ---------------------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ def GA_falling_ball(initial_population, steps, N, lbd, s):
     for generation in range(steps):
 
         # rank and select parents (25: 1 is the best performing, the others selected with p proportional to ranking position)
-        parents_indices = parent_selection('fitness_proportional', current_population, 25, N, lbd, s)
+        parents_indices = parent_selection('ranking_proportional', current_population, 25, N, lbd, s)
 
         # generate offspring: method='two_by_two'
         new_generation=offspring_method(parents_indices, current_population, 'traditional_cross')
@@ -55,7 +56,7 @@ def GA_falling_ball(initial_population, steps, N, lbd, s):
     np.savetxt('final_population.txt', current_population,fmt='%0.0d')
     np.savetxt('evolution_best_chromosomes.txt', evolution_best_chromosomes,fmt='%1.0d')
     
-    return [avg_fit_new, current_population]
+    return [avg_fit_new, average_fitness, current_population]
 
 N=11
 n=2*(N-1)*(2*(N-1)+1)
@@ -64,6 +65,21 @@ for row in range(trial_chromosomes.shape[0]):
     for column in range(trial_chromosomes.shape[1]):
         if rn.random()<0.5: trial_chromosomes[row][column]-=2
 
-print(GA_falling_ball(trial_chromosomes, 2, N, 0.5, 3))    
+results=GA_falling_ball(trial_chromosomes, 100, N, 0.5, 3)
+print(results) 
+
+#plot average fitness over generations
+
+plt.figure(figsize=(10,7))
+
+plt.plot(np.arange(0,100),results[1])
+plt.grid()
+
+plt.ylabel('Average fitness of the population',fontsize=20)
+plt.xlabel('generation',fontsize=20)
+plt.title('Average fitness over generation',fontsize=25)
+
+
+plt.show()
 
 
