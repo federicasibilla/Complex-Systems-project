@@ -17,3 +17,6 @@
 - Python module `pygame`
 - Python module `copy`
 - Python module `matplotlib`
+
+# Other content
+[This video](https://youtu.be/4Wabw-BbCKs) shows how the evolution of the behavior of the best chromosome over the generations.
