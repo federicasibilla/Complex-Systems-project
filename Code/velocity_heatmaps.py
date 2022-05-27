@@ -46,6 +46,8 @@ tic = time.perf_counter() # take time reference
 #        generations_required=0
 #        avg_fitness=0
 #        while(avg_fitness<desired_fitness):
+#           if generations_required==100:
+#               break
 #            avg_fitness, new_chromosomes=GA_falling_ball(trial_chromosomes, 1, N, l, s)[0:3:2]
 #            trial_chromosomes=new_chromosomes
 #            generations_required+=1
@@ -92,6 +94,8 @@ for i,e in enumerate(s): # iterate on s
         generations_required=0
         avg_fitness=0
         while(avg_fitness<desired_fitness):
+            if generations_required==100:
+                break
             avg_fitness, new_chromosomes=GA_falling_ball(trial_chromosomes, 1, N, lbd, e)[0:3:2]
             trial_chromosomes=new_chromosomes
             generations_required+=1
