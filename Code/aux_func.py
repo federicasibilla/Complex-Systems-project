@@ -28,7 +28,7 @@ def parent_selection(method, population, n, N, lbd, s):
     # choose fitness proportional selection: probability is proportional to fitness
     if method=='fitness_proportional':
         
-        # keep best 25 chromosomes  
+        # choose 25 chromosomes  
         sorted_indices=np.argsort(current_population_fitness)[::-1] 
         cpf=np.argsort(current_population_fitness)[::-1][1:n+1]
         

@@ -39,7 +39,7 @@ def GA_falling_ball(initial_population, steps, N, lbd, s):
         parents_indices = parent_selection('fitness_proportional', current_population, 25, N, lbd, s)
 
         # generate offspring: method='two_by_two'
-        new_generation=offspring_method(parents_indices, current_population, 'traditional_cross')
+        new_generation=offspring_method(parents_indices, current_population, 'two_by_two')
 
         # evaluate efficiency of new generation and store 
         fitnesses = np.asarray([falling_ball_game(chromosome, N, lbd, s) for chromosome in new_generation])
